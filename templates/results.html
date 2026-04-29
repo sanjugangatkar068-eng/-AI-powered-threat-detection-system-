@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Threat Analysis Results</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #e0e0e0;
+            padding: 20px;
+            padding-bottom: 120px;
+            min-height: 100vh;
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto;
+        }
+        .header {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 25px; 
+            border-radius: 15px; 
+            margin-bottom: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        .header h1 {
+            font-size: 28px;
+            background: linear-gradient(90deg, #00f5a0, #00d9f5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+        .verdict { 
+            padding: 20px; 
+            margin: 15px 0; 
+            border-radius: 10px; 
+            font-weight: 600;
+            font-size: 16px;
+            border-left: 4px solid;
+        }
+        .verdict.critical { 
+            background: rgba(239, 68, 68, 0.15);
+            border-color: #ef4444;
+            color: #fca5a5;
+        }
+        .verdict.high { 
+            background: rgba(249, 115, 22, 0.15);
+            border-color: #f97316;
+            color: #fdba74;
+        }
+        .verdict.low { 
+            background: rgba(34, 197, 94, 0.15);
+            border-color: #22c55e;
+            color: #86efac;
+        }
+        .stats { 
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card { 
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px; 
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .stat-card h3 {
+            font-size: 32px;
+            margin-bottom: 5px;
+            background: linear-gradient(90deg, #00f5a0, #00d9f5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stat-card p {
+            color: #a0a0a0;
+            font-size: 13px;
+        }
+        .threats-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        .threats-section h2 {
+            margin-bottom: 20px;
+            color: #00f5a0;
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        th { 
+            background: rgba(0, 245, 160, 0.1);
+            color: #00f5a0;
+            padding: 12px 10px; 
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid rgba(0, 245, 160, 0.3);
+        }
+        td { 
+            padding: 12px 10px; 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+        .risk-critical { 
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+        .risk-high { 
+            background: rgba(249, 115, 22, 0.2);
+            color: #fdba74;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+        .risk-low { 
+            background: rgba(34, 197, 94, 0.2);
+            color: #86efac;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+        .back-btn { 
+            display: inline-block;
+            background: linear-gradient(90deg, #00f5a0, #00d9f5);
+            color: #0f0c29;
+            text-decoration: none; 
+            padding: 12px 25px; 
+            border-radius: 25px; 
+            margin-top: 25px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 245, 160, 0.3);
+        }
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 245, 160, 0.5);
+        }
+        .ai-method {
+            font-size: 11px;
+            color: #00d9f5;
+            font-weight: 600;
+        }
+        .no-threats {
+            text-align: center;
+            padding: 40px;
+            color: #86efac;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ AI Threat Analysis Report</h1>
+            <p style="color:#a0a0a0;">File: {{ filename }}</p>
+            <div class="verdict {% if 'CRITICAL' in ai_verdict %}critical{% elif 'HIGH' in ai_verdict %}high{% else %}low{% endif %}">
+                {{ ai_verdict }}
+            </div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <h3>{{ total_records }}</h3>
+                <p>Total Records Analyzed</p>
+            </div>
+            <div class="stat-card">
+                <h3>{{ threats|length }}</h3>
+                <p>Threats Detected</p>
+            </div>
+            <div class="stat-card">
+                <h3>{{ critical_count }}</h3>
+                <p>Critical Threats</p>
+            </div>
+            <div class="stat-card">
+                <h3>{{ high_count }}</h3>
+                <p>High Risk Threats</p>
+            </div>
+        </div>
+        
+        <div class="threats-section">
+            <h2>🔍 Detected Threats</h2>
+            {% if threats %}
+            <table>
+                <tr>
+                    <th>Source IP</th>
+                    <th>Destination IP</th>
+                    <th>Threat Type</th>
+                    <th>Risk Level</th>
+                    <th>AI Confidence</th>
+                    <th>Detection Method</th>
+                    <th>Evidence</th>
+                </tr>
+                {% for threat in threats %}
+                <tr>
+                    <td>{{ threat.src_ip }}</td>
+                    <td>{{ threat.dst_ip }}</td>
+                    <td>{{ threat.threat }}</td>
+                    <td><span class="risk-{{ threat.risk_level.lower() }}">{{ threat.risk_level }}</span></td>
+                    <td>{{ "%.2f"|format(threat.confidence * 100) }}%</td>
+                    <td><span class="ai-method">{{ threat.ai_method }}</span></td>
+                    <td style="font-size:12px; color:#a0a0a0;">{{ threat.evidence[:60] }}...</td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% else %}
+            <div class="no-threats">
+                ✅ No threats detected. Network traffic appears normal.
+            </div>
+            {% endif %}
+        </div>
+        
+        <a href="/" class="back-btn">← New Analysis</a>
+    </div>
+
+    <!-- AI Chatbot Widget -->
+    <div id="chat-widget" style="position:fixed; bottom:20px; right:20px; width:350px; background:rgba(15, 12, 41, 0.95); backdrop-filter:blur(10px); border:1px solid rgba(0, 245, 160, 0.3); border-radius:15px; padding:15px; z-index:9999; box-shadow:0 8px 32px rgba(0, 245, 160, 0.2);">
+        <h3 style="background: linear-gradient(90deg, #00f5a0, #00d9f5); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin:0 0 10px 0; font-size:16px;">🤖 AI Security Assistant</h3>
+        <div id="chatbox" style="height:220px; overflow-y:auto; background:rgba(0,0,0,0.3); padding:10px; margin-bottom:10px; border-radius:8px; font-size:13px; line-height:1.4;"></div>
+        <div style="display:flex; gap:5px;">
+            <input id="chatinput" type="text" placeholder="Ask about these threats..." 
+                   style="flex:1; padding:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(0, 245, 160, 0.3); color:#e0e0e0; border-radius:8px; font-size:13px;"
+                   onkeypress="if(event.key==='Enter') sendChat()">
+            <button onclick="sendChat()" style="padding:8px 12px; background:linear-gradient(90deg, #00f5a0, #00d9f5); color:#0f0c29; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">Send</button>
+        </div>
+    </div>
+
+    <script>
+    async function sendChat(){
+        const input = document.getElementById('chatinput');
+        const msg = input.value.trim();
+        if(!msg) return;
+        
+        const box = document.getElementById('chatbox');
+        box.innerHTML += `<div style="color:#00f5a0; margin:6px 0;"><b>You:</b> ${msg}</div>`;
+        input.value = '';
+        box.innerHTML += `<div id="thinking" style="color:#888; margin:6px 0;">AI thinking...</div>`;
+        box.scrollTop = box.scrollHeight;
+        
+        try {
+            const res = await fetch('/chat', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({message: msg})
+            });
+            const data = await res.json();
+            document.getElementById('thinking').remove();
+            box.innerHTML += `<div style="color:#e0e0e0; margin:6px 0;"><b>AI:</b> ${data.reply}</div>`;
+        } catch(err) {
+            document.getElementById('thinking').remove();
+            box.innerHTML += `<div style="color:#fca5a5; margin:6px 0;"><b>Error:</b> Can't reach chatbot</div>`;
+        }
+        box.scrollTop = box.scrollHeight;
+    }
+    </script>
+</body>
+</html>
