@@ -40,6 +40,8 @@ pip install flask scikit-learn pandas requests
 # Download LLM model (one time)
 ollama pull llama3.2:1b
 
+upload(empty storage space)
+
 RUN:
 # Terminal 1: Start Ollama
 ollama serve
