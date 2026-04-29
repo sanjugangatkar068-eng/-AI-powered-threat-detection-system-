@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Threat Detection</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #e0e0e0;
+            margin: 0; 
+            padding: 20px;
+            padding-bottom: 100px;
+            min-height: 100vh;
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px; 
+            border-radius: 15px; 
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        h1 { 
+            text-align: center; 
+            font-size: 32px;
+            background: linear-gradient(90deg, #00f5a0, #00d9f5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        .upload-area { 
+            border: 2px dashed rgba(0, 245, 160, 0.5);
+            padding: 40px; 
+            text-align: center; 
+            margin: 20px 0; 
+            border-radius: 10px;
+            background: rgba(0, 245, 160, 0.05);
+        }
+        input[type="file"] { 
+            margin: 20px 0; 
+            color: #e0e0e0;
+        }
+        button { 
+            background: linear-gradient(90deg, #00f5a0, #00d9f5);
+            color: #0f0c29;
+            border: none; 
+            padding: 15px 30px; 
+            font-size: 16px; 
+            font-weight: bold; 
+            border-radius: 25px; 
+            cursor: pointer; 
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 245, 160, 0.3);
+        }
+        button:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 245, 160, 0.5);
+        }
+        .flash { 
+            padding: 15px; 
+            margin: 20px 0; 
+            border-radius: 10px; 
+            text-align: center;
+        }
+        .flash.error { 
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .feature-box {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 245, 160, 0.2);
+        }
+        .feature-box h3 {
+            color: #00f5a0;
+            margin: 0 0 10px 0;
+            font-size: 15px;
+        }
+        .feature-box p {
+            margin: 0;
+            font-size: 13px;
+            color: #a0a0a0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div style="text-align:center; margin-bottom:20px;">
+            <span style="background:linear-gradient(90deg, #00f5a0, #00d9f5); color:#0f0c29; padding:5px 15px; border-radius:20px; font-size:12px; font-weight:bold;">🤖 AI POWERED</span>
+        </div>
+        
+        <h1>Threat Detection System</h1>
+        <p style="text-align:center; color:#a0a0a0; margin-top:-10px;">Machine Learning + Signature-Based Analysis for Real-Time Cyber Threat Detection</p>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form method="POST" action="/analyze" enctype="multipart/form-data">
+            <div class="upload-area">
+                <p>Upload network traffic file (.pcap,.csv,.txt,.log,.json)</p>
+                <input type="file" name="file" accept=".pcap,.pcapng,.cap,.csv,.txt,.log,.json" required>
+                <br>
+                <button type="submit">⚡ Run AI Analysis</button>
+            </div>
+        </form>
+
+        <div class="features">
+            <div class="feature-box">
+                <h3>ML Anomaly Detection</h3>
+                <p>Isolation Forest algorithm detects unknown threats and zero-day attacks</p>
+            </div>
+            <div class="feature-box">
+                <h3>Signature-Based AI</h3>
+                <p>Detects SQL Injection, XSS, Command Injection, Path Traversal</p>
+            </div>
+            <div class="feature-box">
+                <h3>Threat Classification</h3>
+                <p>Auto-classifies SSH Brute Force, RDP Scans, Data Exfiltration</p>
+            </div>
+            <div class="feature-box">
+                <h3>Risk Scoring</h3>
+                <p>AI confidence scores + Critical/High/Medium/Low risk levels</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chatbot Widget -->
+    <div id="chat-widget" style="position:fixed; bottom:20px; right:20px; width:350px; background:rgba(15, 12, 41, 0.95); backdrop-filter:blur(10px); border:1px solid rgba(0, 245, 160, 0.3); border-radius:15px; padding:15px; z-index:9999; box-shadow:0 8px 32px rgba(0, 245, 160, 0.2);">
+        <h3 style="background: linear-gradient(90deg, #00f5a0, #00d9f5); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin:0 0 10px 0; font-size:16px;">🤖 AI Security Assistant</h3>
+        <div id="chatbox" style="height:220px; overflow-y:auto; background:rgba(0,0,0,0.3); padding:10px; margin-bottom:10px; border-radius:8px; font-size:13px; line-height:1.4;"></div>
+        <div style="display:flex; gap:5px;">
+            <input id="chatinput" type="text" placeholder="Ask about threats, SQL injection..." 
+                   style="flex:1; padding:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(0, 245, 160, 0.3); color:#e0e0e0; border-radius:8px; font-size:13px;"
+                   onkeypress="if(event.key==='Enter') sendChat()">
+            <button onclick="sendChat()" style="padding:8px 12px; background:linear-gradient(90deg, #00f5a0, #00d9f5); color:#0f0c29; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">Send</button>
+        </div>
+    </div>
+
+    <script>
+    async function sendChat(){
+        const input = document.getElementById('chatinput');
+        const msg = input.value.trim();
+        if(!msg) return;
+        
+        const box = document.getElementById('chatbox');
+        box.innerHTML += `<div style="color:#00f5a0; margin:6px 0;"><b>You:</b> ${msg}</div>`;
+        input.value = '';
+        box.innerHTML += `<div id="thinking" style="color:#888; margin:6px 0;">AI thinking...</div>`;
+        box.scrollTop = box.scrollHeight;
+        
+        try {
+            const res = await fetch('/chat', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({message: msg})
+            });
+            const data = await res.json();
+            document.getElementById('thinking').remove();
+            box.innerHTML += `<div style="color:#e0e0e0; margin:6px 0;"><b>AI:</b> ${data.reply}</div>`;
+        } catch(err) {
+            document.getElementById('thinking').remove();
+            box.innerHTML += `<div style="color:#fca5a5; margin:6px 0;"><b>Error:</b> Can't reach chatbot</div>`;
+        }
+        box.scrollTop = box.scrollHeight;
+    }
+    </script>
+</body>
+</html>
